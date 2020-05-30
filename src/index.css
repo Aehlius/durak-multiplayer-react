@@ -1,0 +1,45 @@
+
+
+#root {
+    position: relative;
+}
+
+.card {
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    background-color: white;
+    color: black;
+    display: inline-block;
+    width: 3.3em;
+    height: 4.6em;
+    border-radius: .3em;
+    -moz-border-radius: .3em;
+    -webkit-border-radius: .3em;
+    padding: .25em;
+    margin: 0 0.5em 5em 0;
+    font-size: 1.2em; /* @change: adjust this value to make bigger or smaller cards */
+    font-weight: normal;
+    font-family: Arial, sans-serif;
+}
+
+.myCard:hover {
+    background-color: orangered;
+}
+
+.myCard {
+    position: relative;
+    bottom: 0;
+    border: 2px solid orangered;
+}
+
+.otherCard {
+    top: 0px;
+    border: 2px solid forestgreen;
+}
+
+.otherCard:hover {
+    background-color: forestgreen;
+}
