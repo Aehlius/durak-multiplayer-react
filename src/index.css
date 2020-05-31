@@ -2,6 +2,7 @@
 
 #root {
     position: relative;
+    text-align: center;
 }
 
 .card {
@@ -19,7 +20,7 @@
     -moz-border-radius: .3em;
     -webkit-border-radius: .3em;
     padding: .25em;
-    margin: 0 0.5em 5em 0;
+    margin: 0 0.5vw 2.5em 0;
     font-size: 1.2em; /* @change: adjust this value to make bigger or smaller cards */
     font-weight: normal;
     font-family: Arial, sans-serif;
@@ -36,10 +37,26 @@
 }
 
 .otherCard {
-    top: 0px;
+    top: 0;
     border: 2px solid forestgreen;
 }
 
 .otherCard:hover {
     background-color: forestgreen;
+}
+
+.trumpCard {
+    position: relative;
+    bottom: 0;
+    border: 2px solid deepskyblue;
+}
+
+.trumpCard:hover {
+    position: center;
+    display: inline-block;
+    background-color: deepskyblue;
+}
+
+.table {
+    border: 2px solid deeppink;
 }
