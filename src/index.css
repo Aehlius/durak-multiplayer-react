@@ -45,13 +45,13 @@
     background-color: forestgreen;
 }
 
-.trumpCard {
+#trumpCard {
     position: relative;
     bottom: 0;
     border: 2px solid deepskyblue;
 }
 
-.trumpCard:hover {
+#trumpCard:hover {
     position: center;
     display: inline-block;
     background-color: deepskyblue;
@@ -59,4 +59,48 @@
 
 .table {
     border: 2px solid deeppink;
+}
+
+.startPage {
+    position: relative;
+    bottom: 0;
+    border: 2px solid mediumslateblue;
+}
+
+.startPage:hover {
+    background-color: mediumslateblue;
+}
+
+#host {
+    right: 15vw;
+}
+
+#join {
+    left: 15vw;
+}
+
+#back {
+    display: block;
+    position: relative;
+    left: 0;
+    top: 0;
+    border: 2px solid darkslategrey;
+}
+
+#back:hover {
+    background-color: darkslategrey;
+}
+
+#idInput {
+    padding: 10px;
+    border: 3px solid #aec6cf;
+}
+
+button {
+    border: 2px solid lightseagreen;
+    background-color: white;
+    color: lightseagreen;
+    padding: 14px 28px;
+    font-size: 16px;
+    cursor: pointer
 }

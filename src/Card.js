@@ -22,7 +22,7 @@ export class Card extends React.Component {
         } else if (this.props.color === 'table') {
             return <button className={"card table"}>{this.props.value}</button>;
         } else {
-            return <button className={"card trumpCard"}>{this.props.value}</button>;
+            return <button className={"card"} id={"trumpCard"}>{this.props.value}</button>;
         }
     }
 }
