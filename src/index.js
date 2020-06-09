@@ -5,11 +5,11 @@ import * as card from './Card';
 import * as network from './Network'
 
 //The classid Durak deck, composed of 33 cards, such as A (Ace) K (King) etc. as well as the card's type (s for spade, etc)
-var deck = ["As", "Ah", "Ad", "Ac", "6s", "6h", "6d", "6c", "7s", "7h", "7d", "7c", "8s", "8h", "8d", "8c", "9s", "9h", "9d", "9c", "10s", "10h", "10d", "10c", "Js", "Jh", "Jd", "Jc", "Qs", "Qh", "Qd", "Qc", "Ks", "Kh", "Kd", "Kc"];
-var myHand = [];
-var otherHand = [];
-var table = [];
-var trump = [];
+let deck = ["As", "Ah", "Ad", "Ac", "6s", "6h", "6d", "6c", "7s", "7h", "7d", "7c", "8s", "8h", "8d", "8c", "9s", "9h", "9d", "9c", "10s", "10h", "10d", "10c", "Js", "Jh", "Jd", "Jc", "Qs", "Qh", "Qd", "Qc", "Ks", "Kh", "Kd", "Kc"];
+let myHand = [];
+let otherHand = [];
+let table = [];
+let trump = [];
 
 //Initialize the players' hands, as well as the trump card, with a random card from the deck.
 card.setupCards(deck, myHand, 6);
@@ -18,12 +18,48 @@ card.setupCards(deck, trump, 1);
 
 class App extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
+
+    componentDidMount() {
+        if(network.inGame === false) {
+            setInterval(() => {
+                this.setState({i: 0});
+            }, 100);
+        }
+    }
+
+
+    render(){
+        if(network.inGame) {
+            return <Game />
+        } else {
+            return <StartingPage />;
+
+        }
+    }
+}
+
+class Game extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
+
+    componentDidMount() {
+        setInterval(() => {
+            this.setState( {i: 0});
+        }, 500);
+    }
+
     render(){
         return (
             <>
                 <h1>Durak</h1>
                 <div id={"otherHand"}>
-                    <card.DrawOtherHand hand={otherHand} />
+                    <card.DrawOtherHand hand={otherHand}/>
                 </div>
                 <div id={"OtherTable"}>
                 </div>
@@ -31,10 +67,10 @@ class App extends React.Component {
                     <card.DrawMyTable table={table} color={'table'}/>
                 </div>
                 <div id={"myHand"}>
-                    <card.DrawMyHand table={table} hand={myHand} color={'myCard'} />
+                    <card.DrawMyHand table={table} hand={myHand} color={'myCard'}/>
                 </div>
                 <div id={"trumpSuit"}>
-                    <card.Card value={trump[0]} />
+                    <card.Card value={trump[0]}/>
                 </div>
             </>
         );
@@ -44,7 +80,8 @@ class App extends React.Component {
 class StartingPage extends React.Component {
     constructor(props){
         super(props);
-        this.state = {hosting: null};
+        this.state = {hosting: null, id: ''};
+        this.sendData = network.sendData.bind(this);
     }
 
 
@@ -57,8 +94,14 @@ class StartingPage extends React.Component {
     }
 
     back = () => {
-        this.setState({hosting: null});
+        this.setState({hosting: null})
     }
+
+    handleChange = (e) => {
+        this.setState({id: e.target.value});
+    }
+
+
     
     render(){
         if(this.state.hosting == null) {
@@ -84,9 +127,9 @@ class StartingPage extends React.Component {
                     <button id={"back"} className={"card"} onClick={this.back} key={"back"}>Back</button>
                     <h1>Durak!</h1>
                     <h2>Connect to: </h2>
-                    <input id={"idInput"}></input>
+                    <input id={"idInput"} value={this.state.id} autoComplete={"off"} onChange={this.handleChange}></input>
                     <br />
-                    <button type={"submit"}>Connect</button>
+                    <button type={"submit"} id={"connect"} onClick={this.sendData.bind(this, this.state.id)} >Connect</button>
                 </>
             );
         }
@@ -97,11 +140,12 @@ class StartingPage extends React.Component {
 export function renderDom(){
     ReactDOM.render(
         <React.StrictMode>
-            <StartingPage />
+            <App />
         </React.StrictMode>,
         document.getElementById('root')
     );
 
 }
+
 
 renderDom();

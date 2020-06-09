@@ -11,8 +11,53 @@ function generateID(numberOfWords){
 }
 
 export var id = generateID(3);
-export const peer = new Peer("durak-" + id);
+export const p = new Peer("durak-" + id, {host: window.location.hostname, port: 9000});
 
-peer.on('open', function(id) {
+export let conn = null;
+
+export let inGame = false;
+
+p.on('open', function(id) {
     console.log('My peer ID is: ' + id);
 });
+
+p.on('connection', function(conn) {
+    conn.reliable = true;
+
+    conn.on('open', function() {
+        inGame = true;
+        console.log('Connected!');
+
+        // Receive messages
+        conn.on('data', function(data) {
+            console.log('Received', data);
+        });
+
+        // Send messages
+        conn.send('Hola mundo!');
+
+    });
+
+});
+
+
+
+
+export function sendData(id){
+    var conn = p.connect("durak-" + id);
+    conn.reliable = true;
+
+    console.log('Connecting to durak-' + id + '...');
+
+    conn.on('open', function() {
+        console.log('Connected!');
+        inGame = true;
+
+        // Receive messages
+        conn.on('data', function(data) {
+            console.log('Received', data);
+        });
+
+
+    });
+}

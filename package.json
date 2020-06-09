@@ -6,17 +6,22 @@
     "@testing-library/jest-dom": "^5.9.0",
     "@testing-library/react": "^10.0.5",
     "@testing-library/user-event": "^10.4.1",
+    "bugout": "0.0.9",
     "peerjs": "^1.2.0",
+    "peerjs-server": "^0.2.9",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
-    "redux": "^4.0.5"
+    "redux": "^4.0.5",
+    "concurrently": "^5.2.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start-react-server": "react-scripts start",
+    "start-peer-server": "peerjs --port 9000",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "start": "concurrently --kill-others \"react-scripts start\" \"peerjs --port 9000\""
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -32,5 +37,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "concurrently": "^5.2.0"
   }
 }
