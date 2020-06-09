@@ -11,6 +11,8 @@ let otherHand = [];
 let table = [];
 let trump = [];
 
+let hosting;
+
 //Initialize the players' hands, as well as the trump card, with a random card from the deck.
 card.setupCards(deck, myHand, 6);
 card.setupCards(deck, otherHand, 6);
@@ -50,6 +52,9 @@ class Game extends React.Component {
 
     componentDidMount() {
         setInterval(() => {
+            if(hosting){
+                network.sendData(network.conn.id, {table: table});
+            }
             this.setState( {i: 0});
         }, 500);
     }
@@ -87,10 +92,12 @@ class StartingPage extends React.Component {
 
     host = () => {
         this.setState({hosting: true});
+        hosting = true;
     }
 
     join = () => {
         this.setState({hosting: false});
+        hosting = false;
     }
 
     back = () => {
@@ -129,7 +136,7 @@ class StartingPage extends React.Component {
                     <h2>Connect to: </h2>
                     <input id={"idInput"} value={this.state.id} autoComplete={"off"} onChange={this.handleChange}></input>
                     <br />
-                    <button type={"submit"} id={"connect"} onClick={this.sendData.bind(this, this.state.id)} >Connect</button>
+                    <button type={"submit"} id={"connect"} onClick={this.sendData.bind(this, this.state.id, '')} >Connect</button>
                 </>
             );
         }

@@ -22,8 +22,6 @@ p.on('open', function(id) {
 });
 
 p.on('connection', function(conn) {
-    conn.reliable = true;
-
     conn.on('open', function() {
         inGame = true;
         console.log('Connected!');
@@ -43,12 +41,13 @@ p.on('connection', function(conn) {
 
 
 
-export function sendData(id){
+export function sendData(id, data){
     var conn = p.connect("durak-" + id);
     conn.reliable = true;
 
     console.log('Connecting to durak-' + id + '...');
 
+    //Sometimes the connection simply never opens
     conn.on('open', function() {
         console.log('Connected!');
         inGame = true;
@@ -57,7 +56,8 @@ export function sendData(id){
         conn.on('data', function(data) {
             console.log('Received', data);
         });
-
-
     });
+
+    //Sometimes the connection is open but no data is sent
+    conn.send(data);
 }
