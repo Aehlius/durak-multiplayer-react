@@ -8,15 +8,15 @@ export class Card extends React.Component {
     }
 
     addToTable(){
-        if(this.props.color === 'myCard') {
-            moveCard(this.props.myHand, this.props.table, this.props.myHand.indexOf(this.props.value))
+        if(this.props.color === 'hostCard') {
+            moveCard(this.props.hostHand, this.props.table, this.props.hostHand.indexOf(this.props.value))
             main.renderDom();
         }
     }
 
     render() {
-        if (this.props.color === 'myCard') {
-            return <button className={"card myCard"} onClick={this.addToTable}>{this.props.value}</button>;
+        if (this.props.color === 'hostCard') {
+            return <button className={"card hostCard"} onClick={this.addToTable}>{this.props.value}</button>;
         } else if (this.props.color === 'otherCard') {
             return <button className={"card otherCard"}>{this.props.value}</button>;
         } else if (this.props.color === 'table') {
@@ -29,10 +29,10 @@ export class Card extends React.Component {
 
 
 
-export function DrawMyHand(props){
+export function DrawHostHand(props){
     var handToReturn = [];
     for(var i = 0; i < props.hand.length; i++){
-        handToReturn.push(<Card table = {props.table} myHand={props.hand} value={props.hand[i]} color={'myCard'} />);
+        handToReturn.push(<Card table = {props.table} hostHand={props.hand} value={props.hand[i]} color={'hostCard'} />);
     }
 
     return handToReturn;
@@ -41,13 +41,13 @@ export function DrawMyHand(props){
 export function DrawOtherHand(props){
     var handToReturn = [];
     for(var i = 0; i < props.hand.length; i++){
-        handToReturn.push(<Card value={props.hand[i]} table = {props.table} myHand={props.myHand} color={'otherCard'} />);
+        handToReturn.push(<Card value={props.hand[i]} table = {props.table} hostHand={props.hostHand} color={'otherCard'} />);
     }
 
     return handToReturn;
 }
 
-export class DrawMyTable extends React.Component{
+export class DrawTable extends React.Component{
     constructor(props){
         super(props);
         this.state = {table: this.props.table};
@@ -57,7 +57,7 @@ export class DrawMyTable extends React.Component{
         var tableCardsToDraw = [];
 
         for (var i = 0; i < this.state.table.length; i++) {
-            tableCardsToDraw.push(<Card value={this.state.table[i]} table = {this.props.table} myHand={this.state.table} color={this.props.color}/>)
+            tableCardsToDraw.push(<Card value={this.state.table[i]} table = {this.props.table} hostHand={this.state.table} color={this.props.color}/>)
         }
 
         return tableCardsToDraw;

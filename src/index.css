@@ -26,11 +26,11 @@
     font-family: Arial, sans-serif;
 }
 
-.myCard:hover {
+.hostCard:hover {
     background-color: orangered;
 }
 
-.myCard {
+.hostCard {
     position: relative;
     bottom: 0;
     border: 2px solid orangered;

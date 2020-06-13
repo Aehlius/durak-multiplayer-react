@@ -2,19 +2,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import * as card from './Card';
-import * as network from './Network'
+import * as network from './Network';
 
 //The classid Durak deck, composed of 33 cards, such as A (Ace) K (King) etc. as well as the card's type (s for spade, etc)
-let deck = ["As", "Ah", "Ad", "Ac", "6s", "6h", "6d", "6c", "7s", "7h", "7d", "7c", "8s", "8h", "8d", "8c", "9s", "9h", "9d", "9c", "10s", "10h", "10d", "10c", "Js", "Jh", "Jd", "Jc", "Qs", "Qh", "Qd", "Qc", "Ks", "Kh", "Kd", "Kc"];
-let myHand = [];
-let otherHand = [];
-let table = [];
-let trump = [];
+export let deck = ["As", "Ah", "Ad", "Ac", "6s", "6h", "6d", "6c", "7s", "7h", "7d", "7c", "8s", "8h", "8d", "8c", "9s", "9h", "9d", "9c", "10s", "10h", "10d", "10c", "Js", "Jh", "Jd", "Jc", "Qs", "Qh", "Qd", "Qc", "Ks", "Kh", "Kd", "Kc"];
+export let hostHand = [];
+export let otherHand = [];
+export let table = [];
+export let trump = [];
 
 let hosting;
 
 //Initialize the players' hands, as well as the trump card, with a random card from the deck.
-card.setupCards(deck, myHand, 6);
+card.setupCards(deck, hostHand, 6);
 card.setupCards(deck, otherHand, 6);
 card.setupCards(deck, trump, 1);
 
@@ -53,7 +53,7 @@ class Game extends React.Component {
     componentDidMount() {
         setInterval(() => {
             if(hosting){
-                network.sendData(network.conn.id, {table: table});
+                //network.sendData(network.conn.id, {table: table});
             }
             this.setState( {i: 0});
         }, 500);
@@ -68,11 +68,12 @@ class Game extends React.Component {
                 </div>
                 <div id={"OtherTable"}>
                 </div>
-                <div id={"MyTable"}>
-                    <card.DrawMyTable table={table} color={'table'}/>
+                <div id={"Table"}>
+                    <card.DrawTable table={table} color={'table'}/>
                 </div>
-                <div id={"myHand"}>
-                    <card.DrawMyHand table={table} hand={myHand} color={'myCard'}/>
+                <div id={"hostHand"}>
+                    <card.DrawHostHand table={table} hand={hostHand
+                    } color={'hostCard'}/>
                 </div>
                 <div id={"trumpSuit"}>
                     <card.Card value={trump[0]}/>
@@ -136,7 +137,7 @@ class StartingPage extends React.Component {
                     <h2>Connect to: </h2>
                     <input id={"idInput"} value={this.state.id} autoComplete={"off"} onChange={this.handleChange}></input>
                     <br />
-                    <button type={"submit"} id={"connect"} onClick={this.sendData.bind(this, this.state.id, '')} >Connect</button>
+                    <button type={"submit"} id={"connect"} onClick={this.sendData.bind(this, this.state.id)} >Connect</button>
                 </>
             );
         }
@@ -144,15 +145,31 @@ class StartingPage extends React.Component {
 }
 
 
-export function renderDom(){
+export function renderDom() {
+    console.log('Rendered!');
     ReactDOM.render(
         <React.StrictMode>
-            <App />
+            <App/>
         </React.StrictMode>,
         document.getElementById('root')
     );
-
 }
+
+export function updateCards(data){
+    for(var i = 0; i <= data.table.length; i++){
+        if(!table.includes(data.table[i]) && data.table[i]) {
+            table.push(data.table[i]);
+        }
+    }
+
+    for(var i = 0; i <= data.otherHand.length; i++){
+        if(!otherHand.includes(data.otherHand[i]) && data.otherHand[i]) {
+            otherHand.push(data.otherHand[i]);
+        }
+    }
+    renderDom();
+}
+
 
 
 renderDom();
