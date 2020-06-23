@@ -16,6 +16,7 @@ export const p = new Peer("durak-" + id, {host: window.location.hostname, port: 
 
 export let inGame = false;
 
+//This only runs on the host's machine
 p.on('open', function(id) {
     console.log('My peer ID is: ' + id);
 });
@@ -34,34 +35,44 @@ p.on('connection', function(conn) {
 
         });
 
-        // Send messages
-        conn.send('Hola mundo!');
+        setInterval(function(){
+            conn.send({table: app.table, deck: app.deck, hostHand: app.hostHand, otherHand: app.otherHand, trump: app.trump, turn: app.turn});
+        }, 1000);
 
     });
 
 });
 
+let dataToSend;
 
+export function sendData(table){
+    dataToSend = table;
+}
 
-export function sendData(id){
+export function joinGame(id){
     const conn = p.connect("durak-" + id, {reliable: true});
-    console.log('Connecting...')
+    console.log('Connecting...');
 
     conn.on('open', function() {
         inGame = true;
-        console.log('Connected!')
-        // Send messages
-        conn.send('Hello!');
-        setInterval(function(){
-            conn.send({table: app.table});
-        }, 1000);
+        console.log('Connected!');
 
     });
 
     // Receive messages
     conn.on('data', function(data) {
         console.log('Received', data);
+        if (typeof data === 'object') {
+            app.updateCards(data);
+        }
     });
+
+    setInterval(function(){
+        if(dataToSend !== null){
+            conn.send(dataToSend);
+            dataToSend = null;
+        }
+    }, 1)
 
 
 }

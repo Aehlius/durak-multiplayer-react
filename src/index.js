@@ -11,12 +11,9 @@ export let otherHand = [];
 export let table = [];
 export let trump = [];
 
-let hosting;
+export let hosting;
 
-//Initialize the players' hands, as well as the trump card, with a random card from the deck.
-card.setupCards(deck, hostHand, 6);
-card.setupCards(deck, otherHand, 6);
-card.setupCards(deck, trump, 1);
+export let turn = 0;
 
 class App extends React.Component {
 
@@ -52,9 +49,6 @@ class Game extends React.Component {
 
     componentDidMount() {
         setInterval(() => {
-            if(hosting){
-                //network.sendData(network.conn.id, {table: table});
-            }
             this.setState( {i: 0});
         }, 500);
     }
@@ -87,7 +81,7 @@ class StartingPage extends React.Component {
     constructor(props){
         super(props);
         this.state = {hosting: null, id: ''};
-        this.sendData = network.sendData.bind(this);
+        this.joinGame = network.joinGame.bind(this);
     }
 
 
@@ -113,6 +107,9 @@ class StartingPage extends React.Component {
     
     render(){
         if(this.state.hosting == null) {
+            hostHand = [];
+            otherHand = [];
+            trump = [];
             return (
                 <>
                     <h1>Durak!</h1>
@@ -122,6 +119,10 @@ class StartingPage extends React.Component {
                 </>
             );
         } else if(this.state.hosting){
+            //Initialize the players' hands, as well as the trump card, with a random card from the deck.
+            card.setupCards(deck, hostHand, 6);
+            card.setupCards(deck, otherHand, 6);
+            card.setupCards(deck, trump, 1);
             return (
                 <>
                     <button id={"back"} className={"card"} onClick={this.back} key={"back"}>Back</button>
@@ -137,7 +138,7 @@ class StartingPage extends React.Component {
                     <h2>Connect to: </h2>
                     <input id={"idInput"} value={this.state.id} autoComplete={"off"} onChange={this.handleChange}></input>
                     <br />
-                    <button type={"submit"} id={"connect"} onClick={this.sendData.bind(this, this.state.id)} >Connect</button>
+                    <button type={"submit"} id={"connect"} onClick={this.joinGame.bind(this, this.state.id)} >Connect</button>
                 </>
             );
         }
@@ -156,20 +157,62 @@ export function renderDom() {
 }
 
 export function updateCards(data){
-    for(var i = 0; i <= data.table.length; i++){
-        if(!table.includes(data.table[i]) && data.table[i]) {
-            table.push(data.table[i]);
+    if(data.table) {
+        for (var i = 0; i <= data.table.length; i++) {
+            if (!table.includes(data.table[i]) && data.table[i]) {
+                table.push(data.table[i]);
+            }
         }
     }
 
-    for(var i = 0; i <= data.otherHand.length; i++){
-        if(!otherHand.includes(data.otherHand[i]) && data.otherHand[i]) {
-            otherHand.push(data.otherHand[i]);
+
+    if(data.deck) {
+        for (var i = 0; i <= data.deck.length; i++) {
+            if (!deck.includes(data.deck[i]) && data.deck[i]) {
+                deck.push(data.deck[i]);
+            }
         }
     }
+
+    if(data.hostHand) {
+        for (var i = 0; i <= data.hostHand.length; i++) {
+            if (!hostHand.includes(data.hostHand[i]) && data.hostHand[i]) {
+                hostHand.push(data.hostHand[i]);
+            }
+        }
+    }
+
+    if(data.trump) {
+        for (var i = 0; i <= data.trump.length; i++) {
+            if (!trump.includes(data.trump[i]) && data.trump[i]) {
+                trump.push(data.trump[i]);
+
+            }
+        }
+    }
+
+    if(data.otherHand) {
+        for (var i = 0; i <= data.otherHand.length; i++) {
+            if (!otherHand.includes(data.otherHand[i]) && data.otherHand[i]) {
+                otherHand.push(data.otherHand[i]);
+            }
+        }
+    }
+
+    if(data.turn){
+        turn = data.turn;
+    }
+
+
+
+
+
+
     renderDom();
 }
 
-
+export function addTurn(){
+    turn ++;
+}
 
 renderDom();

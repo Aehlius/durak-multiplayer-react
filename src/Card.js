@@ -1,5 +1,6 @@
 import React from 'react';
-import * as main from './index.js';
+import * as main from './index';
+import * as net from './Network'
 
 export class Card extends React.Component {
     constructor(props) {
@@ -8,9 +9,15 @@ export class Card extends React.Component {
     }
 
     addToTable(){
-        if(this.props.color === 'hostCard') {
+        console.log(main.turn);
+        console.log(main.hosting)
+        if(main.hosting && main.turn % 2 === 0 || !main.hosting && main.turn % 2 !== 0) {
             moveCard(this.props.hostHand, this.props.table, this.props.hostHand.indexOf(this.props.value))
             main.renderDom();
+            main.addTurn();
+            if(!main.hosting){
+                net.sendData({table: this.props.table});
+            }
         }
     }
 
