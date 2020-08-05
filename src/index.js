@@ -5,7 +5,7 @@ import * as card from './Card';
 import * as network from './Network';
 
 //The classid Durak deck, composed of 33 cards, such as A (Ace) K (King) etc. as well as the card's type (s for spade, etc)
-export let deck = ["As", "Ah", "Ad", "Ac", "6s", "6h", "6d", "6c", "7s", "7h", "7d", "7c", "8s", "8h", "8d", "8c", "9s", "9h", "9d", "9c", "10s", "10h", "10d", "10c", "Js", "Jh", "Jd", "Jc", "Qs", "Qh", "Qd", "Qc", "Ks", "Kh", "Kd", "Kc"];
+export let deck = ["1s", "1h", "1d", "1c", "6s", "6h", "6d", "6c", "7s", "7h", "7d", "7c", "8s", "8h", "8d", "8c", "9s", "9h", "9d", "9c", "10s", "10h", "10d", "10c", "11s", "11h", "11d", "11c", "12s", "12h", "12d", "12c", "13s", "13h", "13d", "13c"];
 export let hostHand = [];
 export let otherHand = [];
 export let table = [];
@@ -122,6 +122,58 @@ class StartingPage extends React.Component {
             card.setupCards(deck, hostHand, 6);
             card.setupCards(deck, otherHand, 6);
             card.setupCards(deck, trump, 1);
+
+            let hostHandLowestTrump = 12;
+            let otherHandLowestTrump = 12;
+            let trumpNumVal;
+
+            if(turn === 0) {
+                if(trump[0].length === 2){
+                    trumpNumVal = Number(trump[0][0])
+                } else {
+                    trumpNumVal = Number(trump[0].substring(0, 2))
+                }
+
+                for(let i = 0; i < hostHand.length; i++){
+                    if(hostHand[i][-1]== trump[0][-1]) {
+                        if (hostHand[i].length === 2) {
+                            if(Number(hostHand[i][0]) < hostHandLowestTrump){
+                                hostHandLowestTrump = Number(hostHand[i][0])
+                            }
+                        } else {
+                            if(Number(hostHand[i].substring(0, 2)) < trumpNumVal){
+                                hostHandLowestTrump = Number(hostHand[i].indexOf(0))
+                            }
+                        }
+                    }
+                }
+
+                for(let i = 0; i < otherHand.length; i++){
+                    if(otherHand[i][-1]== trump[0][-1]) {
+                        if (otherHand[i].length === 2) {
+                            if(Number(otherHand[i][0]) < otherHandLowestTrump){
+                                otherHandLowestTrump = Number(otherHand[i][0])
+                            }
+                        } else {
+                            if(Number(otherHand[i].substring(0, 2)) < trumpNumVal){
+                                otherHandLowestTrump = Number(otherHand[i].indexOf(0))
+                            }
+                        }
+                    }
+            }
+
+
+                if (otherHandLowestTrump < hostHandLowestTrump) {
+                    turn++;
+                } else if (hostHandLowestTrump === otherHandLowestTrump) {
+                    if (Math.random() > 0.5) {
+                        turn++;
+                    }
+                }
+            }
+
+            console.log(turn)
+
             return (
                 <>
                     <button id={"back"} className={"card"} onClick={this.back} key={"back"}>Back</button>
