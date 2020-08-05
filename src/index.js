@@ -159,6 +159,13 @@ export function updateCards(data){
     if(data.table) {
         for (var i = 0; i <= data.table.length; i++) {
             if (!table.includes(data.table[i]) && data.table[i]) {
+                if(turn % 2 == 0) {
+                    hostHand.splice(hostHand.indexOf(data.table[i]), 1);
+                    turn++;
+                } else {
+                    otherHand.splice(otherHand.indexOf(data.table[i]), 1);
+                    turn++;
+                }
                 table.push(data.table[i]);
             }
         }
