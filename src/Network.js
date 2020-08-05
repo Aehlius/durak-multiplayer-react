@@ -1,6 +1,6 @@
 import Peer from 'peerjs';
 import words from './Words';
-import * as app from './index';
+import * as main from './index';
 
 function generateID(numberOfWords){
     var id = words[Math.floor(Math.random() * words.length)];
@@ -30,13 +30,13 @@ p.on('connection', function(conn) {
         conn.on('data', function(data) {
             console.log('Received', data);
             if (typeof data === 'object') {
-                app.updateCards(data);
+                main.updateCards(data);
             }
 
         });
 
         setInterval(function(){
-            conn.send({table: app.table, deck: app.deck, hostHand: app.hostHand, otherHand: app.otherHand, trump: app.trump, turn: app.turn});
+            conn.send({table: main.table, deck: main.deck, hostHand: main.hostHand, otherHand: main.otherHand, trump: main.trump, turn: main.turn});
         }, 1000);
 
     });
@@ -63,7 +63,7 @@ export function joinGame(id){
     conn.on('data', function(data) {
         console.log('Received', data);
         if (typeof data === 'object') {
-            app.updateCards(data);
+            main.updateCards(data);
         }
     });
 

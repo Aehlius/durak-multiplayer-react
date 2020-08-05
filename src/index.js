@@ -58,7 +58,7 @@ class Game extends React.Component {
             <>
                 <h1>Durak</h1>
                 <div id={"otherHand"}>
-                    <card.DrawOtherHand hand={otherHand}/>
+                    <card.DrawOtherHand table={table} hand={otherHand}/>
                 </div>
                 <div id={"OtherTable"}>
                 </div>
@@ -66,8 +66,7 @@ class Game extends React.Component {
                     <card.DrawTable table={table} color={'table'}/>
                 </div>
                 <div id={"hostHand"}>
-                    <card.DrawHostHand table={table} hand={hostHand
-                    } color={'hostCard'}/>
+                    <card.DrawHostHand table={table} hand={hostHand} color={'hostCard'}/>
                 </div>
                 <div id={"trumpSuit"}>
                     <card.Card value={trump[0]}/>

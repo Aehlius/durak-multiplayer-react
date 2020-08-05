@@ -1,31 +1,38 @@
 import React from 'react';
 import * as main from './index';
-import * as net from './Network'
+import * as net from './Network';
 
 export class Card extends React.Component {
     constructor(props) {
         super(props);
-        this.addToTable = this.addToTable.bind(this);
+        this.addToTableHost = this.addToTableHost.bind(this);;
+        this.addToTableOther = this.addToTableOther.bind(this)
     }
 
-    addToTable(){
-        console.log(main.turn);
-        console.log(main.hosting)
-        if(main.hosting && main.turn % 2 === 0 || !main.hosting && main.turn % 2 !== 0) {
+    addToTableHost(){
+        if(main.hosting && main.turn % 2 === 0) {
             moveCard(this.props.hostHand, this.props.table, this.props.hostHand.indexOf(this.props.value))
             main.renderDom();
             main.addTurn();
-            if(!main.hosting){
-                net.sendData({table: this.props.table});
-            }
+
+        }
+    }
+    
+    addToTableOther(){
+        if(!main.hosting && main.turn % 2 !== 0){
+            console.log("Table:" + this.props.table)
+            moveCard(this.props.otherHand, this.props.table, this.props.otherHand.indexOf(this.props.value))
+            main.renderDom();
+            main.addTurn();
+            net.sendData({table: this.props.table});
         }
     }
 
     render() {
         if (this.props.color === 'hostCard') {
-            return <button className={"card hostCard"} onClick={this.addToTable}>{this.props.value}</button>;
+            return <button className={"card hostCard"} onClick={this.addToTableHost}>{this.props.value}</button>;
         } else if (this.props.color === 'otherCard') {
-            return <button className={"card otherCard"}>{this.props.value}</button>;
+            return <button className={"card otherCard"} onClick={this.addToTableOther}>{this.props.value}</button>;
         } else if (this.props.color === 'table') {
             return <button className={"card table"}>{this.props.value}</button>;
         } else {
@@ -48,7 +55,7 @@ export function DrawHostHand(props){
 export function DrawOtherHand(props){
     var handToReturn = [];
     for(var i = 0; i < props.hand.length; i++){
-        handToReturn.push(<Card value={props.hand[i]} table = {props.table} hostHand={props.hostHand} color={'otherCard'} />);
+        handToReturn.push(<Card table = {props.table} otherHand={props.hand} value={props.hand[i]} color={'otherCard'} />);
     }
 
     return handToReturn;
