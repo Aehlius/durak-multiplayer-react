@@ -125,39 +125,24 @@ class StartingPage extends React.Component {
 
             let hostHandLowestTrump = 12;
             let otherHandLowestTrump = 12;
-            let trumpNumVal;
 
             if(turn === 0) {
-                if(trump[0].length === 2){
-                    trumpNumVal = Number(trump[0][0])
-                } else {
-                    trumpNumVal = Number(trump[0].substring(0, 2))
-                }
-
                 for(let i = 0; i < hostHand.length; i++){
-                    if(hostHand[i][-1]== trump[0][-1]) {
-                        if (hostHand[i].length === 2) {
-                            if(Number(hostHand[i][0]) < hostHandLowestTrump){
-                                hostHandLowestTrump = Number(hostHand[i][0])
-                            }
-                        } else {
-                            if(Number(hostHand[i].substring(0, 2)) < trumpNumVal){
-                                hostHandLowestTrump = Number(hostHand[i].indexOf(0))
-                            }
+                    const hostHandCardVal = card.getCardValue(hostHand[i]);
+
+                    if(hostHand.slice(-1)[0] === trump.slice(-1)[0]) {
+                        if(hostHandCardVal < hostHandLowestTrump){
+                            hostHandLowestTrump = hostHandCardVal;
                         }
                     }
                 }
 
                 for(let i = 0; i < otherHand.length; i++){
-                    if(otherHand[i][-1]== trump[0][-1]) {
-                        if (otherHand[i].length === 2) {
-                            if(Number(otherHand[i][0]) < otherHandLowestTrump){
-                                otherHandLowestTrump = Number(otherHand[i][0])
-                            }
-                        } else {
-                            if(Number(otherHand[i].substring(0, 2)) < trumpNumVal){
-                                otherHandLowestTrump = Number(otherHand[i].indexOf(0))
-                            }
+                    const otherHandCardVal = card.getCardValue(otherHand[i]);
+
+                    if(otherHand.slice(-1)[0] === trump.slice(-1)[0]) {
+                        if(otherHandCardVal < otherHandLowestTrump){
+                            otherHandLowestTrump = otherHandCardVal;
                         }
                     }
             }

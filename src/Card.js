@@ -11,20 +11,22 @@ export class Card extends React.Component {
 
     addToTableHost(){
         if(main.hosting && main.turn % 2 === 0) {
-            moveCard(this.props.hostHand, this.props.table, this.props.hostHand.indexOf(this.props.value))
-            main.renderDom();
-            main.addTurn();
-
+            if(main.table.length === 0 || getCardValue(this.props.value) >= getCardValue(main.table.slice(-1)[0])) {
+                moveCard(this.props.hostHand, this.props.table, this.props.hostHand.indexOf(this.props.value))
+                main.renderDom();
+                main.addTurn();
+            }
         }
     }
     
     addToTableOther(){
         if(!main.hosting && main.turn % 2 !== 0){
-            console.log("Table:" + this.props.table)
-            moveCard(this.props.otherHand, this.props.table, this.props.otherHand.indexOf(this.props.value))
-            main.renderDom();
-            main.addTurn();
-            net.sendData({table: this.props.table});
+            if(main.table.length === 0 || getCardValue(this.props.value) >= getCardValue(main.table.slice(-1)[0])) {
+                moveCard(this.props.otherHand, this.props.table, this.props.otherHand.indexOf(this.props.value))
+                main.renderDom();
+                main.addTurn();
+                net.sendData({table: this.props.table});
+            }
         }
     }
 
@@ -42,10 +44,14 @@ export class Card extends React.Component {
 }
 
 
+export function getCardValue(card){
+    console.log(Number(card.match(/(\d+)/)[0]))
+    return Number(card.match(/(\d+)/)[0]);
+}
 
 export function DrawHostHand(props){
-    var handToReturn = [];
-    for(var i = 0; i < props.hand.length; i++){
+    let handToReturn = [];
+    for(let i = 0; i < props.hand.length; i++){
         handToReturn.push(<Card table = {props.table} hostHand={props.hand} value={props.hand[i]} color={'hostCard'} />);
     }
 
@@ -85,7 +91,7 @@ export function moveCard(initArray, finalArray, cardIndex){
 }
 
 export function setupCards(deck, hand, numberOfCards){
-    for(var i = hand.length; i < numberOfCards; i ++){
+    for(let i = hand.length; i < numberOfCards; i ++){
         moveCard(deck, hand, Math.floor(Math.random() * deck.length))
     }
 
