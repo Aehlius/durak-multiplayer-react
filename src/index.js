@@ -126,9 +126,9 @@ class StartingPage extends React.Component {
             let hostHandLowestTrump = 12;
             let otherHandLowestTrump = 12;
 
-            if(turn === 0) {
+            if(hostHandLowestTrump === 12 || otherHandLowestTrump === 12) {
                 for(let i = 0; i < hostHand.length; i++){
-                    const hostHandCardVal = card.getCardValue(hostHand[i]);
+                    const hostHandCardVal = hostHand[i].gCV();
 
                     if(hostHand.slice(-1)[0] === trump.slice(-1)[0]) {
                         if(hostHandCardVal < hostHandLowestTrump){
@@ -138,14 +138,14 @@ class StartingPage extends React.Component {
                 }
 
                 for(let i = 0; i < otherHand.length; i++){
-                    const otherHandCardVal = card.getCardValue(otherHand[i]);
+                    const otherHandCardVal = otherHand[i].gCV();
 
-                    if(otherHand.slice(-1)[0] === trump.slice(-1)[0]) {
+                    if(otherHand[i].gCV(true)[1] === trump[0].gCV(true)[1] ) {
                         if(otherHandCardVal < otherHandLowestTrump){
                             otherHandLowestTrump = otherHandCardVal;
                         }
                     }
-            }
+                }
 
 
                 if (otherHandLowestTrump < hostHandLowestTrump) {
@@ -155,9 +155,7 @@ class StartingPage extends React.Component {
                         turn++;
                     }
                 }
-            }
-
-            console.log(turn)
+                }
 
             return (
                 <>
@@ -252,6 +250,14 @@ export function updateCards(data){
 
 
     renderDom();
+}
+
+String.prototype.gCV = function(suit){
+    if(!suit) {
+        return Number(this.match(/(\d+)/)[0]);
+    } else {
+        return [Number(this.match(/(\d+)/)[0]), this.slice(-1)[0]];
+    }
 }
 
 export function addTurn(){

@@ -5,27 +5,68 @@ import * as net from './Network';
 export class Card extends React.Component {
     constructor(props) {
         super(props);
-        this.addToTableHost = this.addToTableHost.bind(this);;
+        this.addToTableHost = this.addToTableHost.bind(this);
         this.addToTableOther = this.addToTableOther.bind(this)
     }
 
+    moveCard(hand, other){
+        moveCard(hand, this.props.table, hand.indexOf(this.props.value))
+        main.renderDom();
+        main.addTurn();
+
+        if(other){
+            net.sendData({table: main.table});
+        }
+    }
+
+
+
     addToTableHost(){
         if(main.hosting && main.turn % 2 === 0) {
-            if(main.table.length === 0 || getCardValue(this.props.value) >= getCardValue(main.table.slice(-1)[0])) {
-                moveCard(this.props.hostHand, this.props.table, this.props.hostHand.indexOf(this.props.value))
-                main.renderDom();
-                main.addTurn();
+            const cardValue = this.props.value.gCV(true);
+            let latestTableCard;
+            if(main.table.length > 0) {
+                latestTableCard = main.table.slice(-1)[0].gCV(true);
+            }
+            const trumpValue = main.trump[0].gCV(true);
+
+            if(cardValue[1] === trumpValue[1]){
+                if(latestTableCard[1] === trumpValue[1]){
+                    if (main.table.length === 0 || cardValue[0] >= latestTableCard[0]) {
+                        this.moveCard(this.props.hostHand);
+                    }
+                } else {
+                    this.moveCard(this.props.hostHand);
+                }
+            } else {
+                if (main.table.length === 0 || cardValue[0] >= latestTableCard[0]) {
+                    this.moveCard(this.props.hostHand);
+                }
             }
         }
     }
     
     addToTableOther(){
         if(!main.hosting && main.turn % 2 !== 0){
-            if(main.table.length === 0 || getCardValue(this.props.value) >= getCardValue(main.table.slice(-1)[0])) {
-                moveCard(this.props.otherHand, this.props.table, this.props.otherHand.indexOf(this.props.value))
-                main.renderDom();
-                main.addTurn();
-                net.sendData({table: this.props.table});
+            const cardValue = this.props.value.gCV(true);
+            let latestTableCard;
+            if(main.table.length > 0) {
+                latestTableCard = main.table.slice(-1)[0].gCV(true);
+            }
+            const trumpValue = main.trump[0].gCV(true);
+
+            if(cardValue[1] === trumpValue[1]){
+                if(latestTableCard[1] === trumpValue[1]){
+                    if (main.table.length === 0 || cardValue[0] >= latestTableCard[0]) {
+                        this.moveCard(this.props.otherHand, true);
+                    }
+                } else {
+                    this.moveCard(this.props.otherHand, true);
+                }
+            } else {
+                if (main.table.length === 0 || cardValue[0] >= latestTableCard[0]) {
+                    this.moveCard(this.props.otherHand, true);
+                }
             }
         }
     }
@@ -44,9 +85,12 @@ export class Card extends React.Component {
 }
 
 
-export function getCardValue(card){
-    console.log(Number(card.match(/(\d+)/)[0]))
-    return Number(card.match(/(\d+)/)[0]);
+String.prototype.gCV = function(suit){
+    if(!suit) {
+        return Number(this.match(/(\d+)/)[0]);
+    } else {
+        return [Number(this.match(/(\d+)/)[0]), this.slice(-1)[0]];
+    }
 }
 
 export function DrawHostHand(props){
@@ -59,8 +103,8 @@ export function DrawHostHand(props){
 }
 
 export function DrawOtherHand(props){
-    var handToReturn = [];
-    for(var i = 0; i < props.hand.length; i++){
+    let handToReturn = [];
+    for(let i = 0; i < props.hand.length; i++){
         handToReturn.push(<Card table = {props.table} otherHand={props.hand} value={props.hand[i]} color={'otherCard'} />);
     }
 
