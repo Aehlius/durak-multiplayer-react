@@ -71,6 +71,9 @@ class Game extends React.Component {
                 <div id={"trumpSuit"}>
                     <card.Card value={trump[0]}/>
                 </div>
+                <div id={"Surrender"}>
+                    <card.Card value={["hi"]}/>
+                </div>
             </>
         );
     }

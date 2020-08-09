@@ -25,21 +25,24 @@ export class Card extends React.Component {
         if(main.hosting && main.turn % 2 === 0) {
             const cardValue = this.props.value.gCV(true);
             let latestTableCard;
+            const trumpValue = main.trump[0].gCV(true);
             if(main.table.length > 0) {
                 latestTableCard = main.table.slice(-1)[0].gCV(true);
+            } else {
+                //This is done to make sure that any checks on the table will always equal true, if the table is empty
+                latestTableCard = cardValue;
             }
-            const trumpValue = main.trump[0].gCV(true);
 
             if(cardValue[1] === trumpValue[1]){
                 if(latestTableCard[1] === trumpValue[1]){
-                    if (main.table.length === 0 || cardValue[0] >= latestTableCard[0]) {
+                    if (main.table.length === 0 || cardValue[0] >= latestTableCard[0] && cardValue[1] === latestTableCard[1]) {
                         this.moveCard(this.props.hostHand);
                     }
                 } else {
                     this.moveCard(this.props.hostHand);
                 }
             } else {
-                if (main.table.length === 0 || cardValue[0] >= latestTableCard[0]) {
+                if (main.table.length === 0 || cardValue[0] >= latestTableCard[0] && cardValue[1] === latestTableCard[1]) {
                     this.moveCard(this.props.hostHand);
                 }
             }
@@ -57,14 +60,14 @@ export class Card extends React.Component {
 
             if(cardValue[1] === trumpValue[1]){
                 if(latestTableCard[1] === trumpValue[1]){
-                    if (main.table.length === 0 || cardValue[0] >= latestTableCard[0]) {
+                    if (main.table.length === 0 || cardValue[0] >= latestTableCard[0] && cardValue[1] === latestTableCard[1]) {
                         this.moveCard(this.props.otherHand, true);
                     }
                 } else {
                     this.moveCard(this.props.otherHand, true);
                 }
             } else {
-                if (main.table.length === 0 || cardValue[0] >= latestTableCard[0]) {
+                if (main.table.length === 0 || cardValue[0] >= latestTableCard[0] && cardValue[1] === latestTableCard[1]) {
                     this.moveCard(this.props.otherHand, true);
                 }
             }
@@ -78,6 +81,8 @@ export class Card extends React.Component {
             return <button className={"card otherCard"} onClick={this.addToTableOther}>{this.props.value}</button>;
         } else if (this.props.color === 'table') {
             return <button className={"card table"}>{this.props.value}</button>;
+        } else if (this.props.color === 'surrender'){
+            return <button className={"card surrender"}>{this.props.value}</button>;
         } else {
             return <button className={"card"} id={"trumpCard"}>{this.props.value}</button>;
         }
