@@ -16,6 +16,7 @@ export let hosting;
 
 export let turn = 0;
 export let attacker = 'host';
+export let numberOfAttacks = 0;
 
 class App extends React.Component {
 
@@ -167,7 +168,7 @@ class StartingPage extends React.Component {
                     <button id={"back"} className={"card"} onClick={this.back} key={"back"}>Back</button>
                     <h1>Durak!</h1>
                     <h2>Connect to: </h2>
-                    <input id={"idInput"} value={this.state.id} autoComplete={"off"} onChange={this.handleChange}></input>
+                    <input id={"idInput"} value={this.state.id} autoComplete={"off"} onChange={this.handleChange}/>
                     <br />
                     <button type={"submit"} id={"connect"} onClick={this.joinGame.bind(this, this.state.id)} >Connect</button>
                 </>
@@ -194,10 +195,10 @@ export function updateCards(data){
             if (!table.includes(data.table[i]) && data.table[i]) {
                 if(turn % 2 == 0) {
                     hostHand.splice(hostHand.indexOf(data.table[i]), 1);
-                    turn++;
+                    addTurn();
                 } else {
                     otherHand.splice(otherHand.indexOf(data.table[i]), 1);
-                    turn++;
+                    addTurn();
                 }
                 table.push(data.table[i]);
             }
@@ -214,7 +215,7 @@ export function updateCards(data){
 
 
     if(data.deck) {
-        for (var i = 0; i <= data.deck.length; i++) {
+        for (let i = 0; i <= data.deck.length; i++) {
             if (!deck.includes(data.deck[i]) && data.deck[i]) {
                 deck.push(data.deck[i]);
             }
@@ -222,7 +223,7 @@ export function updateCards(data){
     }
 
     if(data.hostHand) {
-        for (var i = 0; i <= data.hostHand.length; i++) {
+        for (let i = 0; i <= data.hostHand.length; i++) {
             if (!hostHand.includes(data.hostHand[i]) && data.hostHand[i]) {
                 hostHand.push(data.hostHand[i]);
             }
@@ -276,11 +277,16 @@ String.prototype.gCV = function(suit){
 }
 
 //These 2 functions have to exist because of the weird way React allows different JavaScript files to access data
-export function addTurn(){
+export function addTurn(changeAttacks){
     turn ++;
+    if(changeAttacks === true || changeAttacks === null) {
+        numberOfAttacks++;
+    }
 }
 
 export function changeAttacker(player){
+    numberOfAttacks = 0;
+
     if(player === null){
         if(attacker === 'host'){
             attacker = 'other';

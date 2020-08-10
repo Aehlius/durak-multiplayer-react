@@ -24,54 +24,74 @@ export class Card extends React.Component {
 
     addToTableHost(){
         console.log(main.attacker);
-        if(main.hosting && main.turn % 2 === 0) {
-            const cardValue = this.props.value.gCV(true);
-            let latestTableCard;
-            const trumpValue = main.trump[0].gCV(true);
-            if(main.table.length > 0) {
-                latestTableCard = main.table.slice(-1)[0].gCV(true);
-            } else {
-                //This is done to make sure that any checks on the table will always equal true, if the table is empty
-                latestTableCard = cardValue;
-            }
+        let defenderHand;
 
-            if(cardValue[1] === trumpValue[1]){
-                if(latestTableCard[1] === trumpValue[1]){
-                    if (main.table.length === 0 || cardValue[0] >= latestTableCard[0] && cardValue[1] === latestTableCard[1]) {
-                        this.moveCardToTable(this.props.hostHand);
+        if(main.attacker === "host"){
+            defenderHand = main.otherHand;
+        } else {
+            defenderHand = main.hostHand;
+        }
+        if(main.numberOfAttacks <= 6 || main.numberOfAttacks <= defenderHand.length) {
+            if (main.numberOfAttacks <= 6) {
+                if (main.hosting && main.turn % 2 === 0) {
+                    const cardValue = this.props.value.gCV(true);
+                    let latestTableCard;
+                    const trumpValue = main.trump[0].gCV(true);
+                    if (main.table.length > 0) {
+                        latestTableCard = main.table.slice(-1)[0].gCV(true);
+                    } else {
+                        //This is done to make sure that any checks on the table will always equal true, if the table is empty
+                        latestTableCard = cardValue;
                     }
-                } else {
-                    this.moveCardToTable(this.props.hostHand);
-                }
-            } else {
-                if (main.table.length === 0 || cardValue[0] >= latestTableCard[0] && cardValue[1] === latestTableCard[1]) {
-                    this.moveCardToTable(this.props.hostHand);
+
+                    if (cardValue[1] === trumpValue[1]) {
+                        if (latestTableCard[1] === trumpValue[1]) {
+                            if (main.table.length === 0 || cardValue[0] >= latestTableCard[0] && cardValue[1] === latestTableCard[1]) {
+                                this.moveCardToTable(this.props.hostHand);
+                            }
+                        } else {
+                            this.moveCardToTable(this.props.hostHand);
+                        }
+                    } else {
+                        if (main.table.length === 0 || cardValue[0] >= latestTableCard[0] && cardValue[1] === latestTableCard[1]) {
+                            this.moveCardToTable(this.props.hostHand);
+                        }
+                    }
                 }
             }
         }
     }
     
     addToTableOther(){
-        console.log(main.attacker);
-        if(!main.hosting && main.turn % 2 !== 0){
-            const cardValue = this.props.value.gCV(true);
-            let latestTableCard;
-            if(main.table.length > 0) {
-                latestTableCard = main.table.slice(-1)[0].gCV(true);
-            }
-            const trumpValue = main.trump[0].gCV(true);
+        let defenderHand;
 
-            if(cardValue[1] === trumpValue[1]){
-                if(latestTableCard[1] === trumpValue[1]){
-                    if (main.table.length === 0 || cardValue[0] >= latestTableCard[0] && cardValue[1] === latestTableCard[1]) {
+        if(main.attacker === "host"){
+            defenderHand = main.otherHand;
+        } else {
+            defenderHand = main.hostHand;
+        }
+        if(main.numberOfAttacks <= 6 || main.numberOfAttacks <= defenderHand.length) {
+            console.log(main.attacker);
+            if (!main.hosting && main.turn % 2 !== 0) {
+                const cardValue = this.props.value.gCV(true);
+                let latestTableCard;
+                if (main.table.length > 0) {
+                    latestTableCard = main.table.slice(-1)[0].gCV(true);
+                }
+                const trumpValue = main.trump[0].gCV(true);
+
+                if (cardValue[1] === trumpValue[1]) {
+                    if (latestTableCard[1] === trumpValue[1]) {
+                        if (main.table.length === 0 || cardValue[0] >= latestTableCard[0] && cardValue[1] === latestTableCard[1]) {
+                            this.moveCardToTable(this.props.otherHand, true);
+                        }
+                    } else {
                         this.moveCardToTable(this.props.otherHand, true);
                     }
                 } else {
-                    this.moveCardToTable(this.props.otherHand, true);
-                }
-            } else {
-                if (main.table.length === 0 || cardValue[0] >= latestTableCard[0] && cardValue[1] === latestTableCard[1]) {
-                    this.moveCardToTable(this.props.otherHand, true);
+                    if (main.table.length === 0 || cardValue[0] >= latestTableCard[0] && cardValue[1] === latestTableCard[1]) {
+                        this.moveCardToTable(this.props.otherHand, true);
+                    }
                 }
             }
         }
@@ -84,24 +104,25 @@ export class Card extends React.Component {
             main.addTurn();
             main.renderDom();
 
-
         } else if (!main.hosting && main.turn % 2 !== 0 && main.table.length > 0 && main.attacker === 'host'){
             moveCards(main.table, main.otherHand);
             main.changeAttacker('other')
-            main.addTurn();
+            main.addTurn(false);
             main.renderDom();
             net.sendData({table: main.table, otherHand: main.otherHand, attacker: main.attacker});
 
         } else if(main.hosting && main.turn % 2 === 0 && main.table.length > 0 && main.attacker === 'host'){
             moveCards(main.table, main.discard)
             main.changeAttacker('other');
-            main.addTurn();
+            main.addTurn(false);
             main.renderDom();
+
         } else if(!main.hosting && main.turn % 2 !== 0 && main.table.length > 0 && main.attacker === 'other'){
             moveCards(main.table, main.discard)
             main.changeAttacker('host');
-            main.addTurn();
+            main.addTurn(false);
             main.renderDom();
+
         }
     }
 
