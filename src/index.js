@@ -12,6 +12,8 @@ export let table = [];
 export let trump = [];
 export let discard = [];
 
+export let emptyHand = ["", "", "", "", "", ""]
+
 export let hosting;
 
 export let turn = 0;
@@ -57,28 +59,53 @@ class Game extends React.Component {
     }
 
     render(){
-        return (
-            <>
-                <h1>Durak</h1>
-                <div id={"otherHand"}>
-                    <card.DrawOtherHand table={table} hand={otherHand}/>
-                </div>
-                <div id={"OtherTable"}>
-                </div>
-                <div id={"Table"}>
-                    <card.DrawTable table={table} color={'table'}/>
-                </div>
-                <div id={"hostHand"}>
-                    <card.DrawHostHand table={table} hand={hostHand} color={'hostCard'}/>
-                </div>
-                <div id={"trumpSuit"}>
-                    <card.Card value={trump[0]}/>
-                </div>
-                <div id={"Surrender"}>
-                    <card.Card value={["End \n Turn"]} color={'surrender'}/>
-                </div>
-            </>
-        );
+        if(hosting) {
+            return (
+                <>
+                    <h1>Durak</h1>
+                    <div id={"otherHand"}>
+                        <card.DrawOtherHand table={table} hand={emptyHand}/>
+                    </div>
+                    <div id={"OtherTable"}>
+                    </div>
+                    <div id={"Table"}>
+                        <card.DrawTable table={table} color={'table'}/>
+                    </div>
+                    <div id={"hostHand"}>
+                        <card.DrawHostHand table={table} hand={hostHand} color={'hostCard'}/>
+                    </div>
+                    <div id={"trumpSuit"}>
+                        <card.Card value={trump[0]}/>
+                    </div>
+                    <div id={"Surrender"}>
+                        <card.Card value={["End \n Turn"]} color={'surrender'}/>
+                    </div>
+                </>
+            );
+        } else {
+            return (
+                <>
+                    <h1>Durak</h1>
+                    <div id={"hostHand"}>
+                        <card.DrawHostHand table={table} hand={emptyHand} color={'hostCard'}/>
+                    </div>
+                    <div id={"OtherTable"}>
+                    </div>
+                    <div id={"Table"}>
+                        <card.DrawTable table={table} color={'table'}/>
+                    </div>
+                    <div id={"otherHand"}>
+                        <card.DrawOtherHand table={table} hand={otherHand}/>
+                    </div>
+                    <div id={"trumpSuit"}>
+                        <card.Card value={trump[0]}/>
+                    </div>
+                    <div id={"Surrender"}>
+                        <card.Card value={["End \n Turn"]} color={'surrender'}/>
+                    </div>
+                </>
+            );
+        }
     }
 }
 
@@ -180,6 +207,17 @@ class StartingPage extends React.Component {
 
 export function renderDom() {
     console.log('Rendered!');
+
+    emptyHand.splice(0)
+    if(hosting){
+        for(let i = 0; i < otherHand.length; i++){
+            emptyHand.push("")
+        }
+    } else {
+        for(let i = 0; i < hostHand.length; i++){
+            emptyHand.push("")
+        }
+    }
     ReactDOM.render(
         <React.StrictMode>
             <App/>
@@ -235,6 +273,10 @@ export function updateCards(data){
             if(table.includes(data.hostHand[i])) {
                 table.splice(table.indexOf(data.hostHand[i]), 1)
             }
+
+            if(hosting){
+                emptyHand.push("")
+            }
         }
     }
 
@@ -258,6 +300,10 @@ export function updateCards(data){
 
             if(table.includes(data.otherHand[i])) {
                 table.splice(table.indexOf(data.otherHand[i]), 1)
+            }
+
+            if(!hosting){
+                emptyHand.push("")
             }
 
         }

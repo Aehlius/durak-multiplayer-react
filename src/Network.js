@@ -37,7 +37,9 @@ p.on('connection', function(conn) {
 
         setInterval(function(){
             conn.send({table: main.table, deck: main.deck, hostHand: main.hostHand, otherHand: main.otherHand, trump: main.trump, turn: main.turn});
-        }, 1000);
+            main.renderDom();
+
+            }, 1000);
 
     });
 
@@ -64,6 +66,7 @@ export function joinGame(id){
         console.log('Received', data);
         if (typeof data === 'object') {
             main.updateCards(data);
+            main.renderDom();
         }
     });
 
