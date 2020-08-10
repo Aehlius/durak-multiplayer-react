@@ -75,7 +75,7 @@ class Game extends React.Component {
                     <card.Card value={trump[0]}/>
                 </div>
                 <div id={"Surrender"}>
-                    <card.Card value={["Surrender"]} color={'surrender'}/>
+                    <card.Card value={["End \n Turn"]} color={'surrender'}/>
                 </div>
             </>
         );
@@ -192,11 +192,11 @@ export function renderDom() {
 export function updateCards(data){
     if(data.table) {
         if(data.table.length === 0){
-            table = [];
+            table.splice(0)
         }
 
-        for (var i = 0; i <= data.table.length; i++) {
-            if (!table.includes(data.table[i]) && data.table[i]) {
+        for (var i = 0; i < data.table.length; i++) {
+            if (!table.includes(data.table[i])) {
                 if(turn % 2 === 0) {
                     hostHand.splice(hostHand.indexOf(data.table[i]), 1);
                     addTurn();

@@ -32,30 +32,28 @@ export class Card extends React.Component {
             defenderHand = main.hostHand;
         }
         if(main.numberOfAttacks <= 6 || main.numberOfAttacks <= defenderHand.length) {
-            if (main.numberOfAttacks <= 6) {
-                if (main.hosting && main.turn % 2 === 0) {
-                    const cardValue = this.props.value.gCV(true);
-                    let latestTableCard;
-                    const trumpValue = main.trump[0].gCV(true);
-                    if (main.table.length > 0) {
-                        latestTableCard = main.table.slice(-1)[0].gCV(true);
-                    } else {
-                        //This is done to make sure that any checks on the table will always equal true, if the table is empty
-                        latestTableCard = cardValue;
-                    }
+            if (main.hosting && main.turn % 2 === 0) {
+                const cardValue = this.props.value.gCV(true);
+                let latestTableCard;
+                const trumpValue = main.trump[0].gCV(true);
+                if (main.table.length > 0) {
+                    latestTableCard = main.table.slice(-1)[0].gCV(true);
+                } else {
+                    //This is done to make sure that any checks on the table will always equal true, if the table is empty
+                    latestTableCard = cardValue;
+                }
 
-                    if (cardValue[1] === trumpValue[1]) {
-                        if (latestTableCard[1] === trumpValue[1]) {
-                            if (main.table.length === 0 || cardValue[0] >= latestTableCard[0] && cardValue[1] === latestTableCard[1]) {
-                                this.moveCardToTable(this.props.hostHand);
-                            }
-                        } else {
-                            this.moveCardToTable(this.props.hostHand);
-                        }
-                    } else {
+                if (cardValue[1] === trumpValue[1]) {
+                    if (latestTableCard[1] === trumpValue[1]) {
                         if (main.table.length === 0 || cardValue[0] >= latestTableCard[0] && cardValue[1] === latestTableCard[1]) {
                             this.moveCardToTable(this.props.hostHand);
                         }
+                    } else {
+                        this.moveCardToTable(this.props.hostHand);
+                    }
+                } else {
+                    if (main.table.length === 0 || cardValue[0] >= latestTableCard[0] && cardValue[1] === latestTableCard[1]) {
+                        this.moveCardToTable(this.props.hostHand);
                     }
                 }
             }
@@ -63,6 +61,7 @@ export class Card extends React.Component {
     }
     
     addToTableOther(){
+        console.log(main.attacker);
         let defenderHand;
 
         if(main.attacker === "host"){
@@ -105,7 +104,7 @@ export class Card extends React.Component {
             main.renderDom();
 
             if(newAttacker === 'other'){
-                net.sendData({table: main.table, otherHand: main.otherHand, attacker: main.attacker, deck: main.deck});
+                net.sendData({table: main.table, hostHand: main.hostHand, otherHand: main.otherHand, attacker: main.attacker, deck: main.deck});
             }
 
             if(main.deck.length >= 12) {
