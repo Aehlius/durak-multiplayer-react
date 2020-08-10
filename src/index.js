@@ -191,9 +191,13 @@ export function renderDom() {
 
 export function updateCards(data){
     if(data.table) {
+        if(data.table.length === 0){
+            table = [];
+        }
+
         for (var i = 0; i <= data.table.length; i++) {
             if (!table.includes(data.table[i]) && data.table[i]) {
-                if(turn % 2 == 0) {
+                if(turn % 2 === 0) {
                     hostHand.splice(hostHand.indexOf(data.table[i]), 1);
                     addTurn();
                 } else {
@@ -238,7 +242,10 @@ export function updateCards(data){
         for (var i = 0; i <= data.trump.length; i++) {
             if (!trump.includes(data.trump[i]) && data.trump[i]) {
                 trump.push(data.trump[i]);
+            }
 
+            if(table.includes(data.hostHand[i])) {
+                table.splice(table.indexOf(data.hostHand[i]), 1)
             }
         }
     }

@@ -98,30 +98,33 @@ export class Card extends React.Component {
     }
 
     surrender(){
-        if(main.hosting && main.turn % 2 === 0 && main.table.length > 0 && main.attacker === 'other'){
-            moveCards(main.table, main.hostHand);
-            main.changeAttacker('host')
+        function newBout(newAttacker, loser){
+            moveCards(main.table, loser);
+            main.changeAttacker(newAttacker);
             main.addTurn();
             main.renderDom();
 
+            if(newAttacker === 'other'){
+                net.sendData({table: main.table, otherHand: main.otherHand, attacker: main.attacker, deck: main.deck});
+            }
+
+            if(main.deck.length >= 12) {
+                setupCards(main.deck, main.hostHand, 6)
+                setupCards(main.deck, main.otherHand, 6);
+            }
+        }
+
+        if(main.hosting && main.turn % 2 === 0 && main.table.length > 0 && main.attacker === 'other'){
+            newBout('host', main.hostHand)
+
         } else if (!main.hosting && main.turn % 2 !== 0 && main.table.length > 0 && main.attacker === 'host'){
-            moveCards(main.table, main.otherHand);
-            main.changeAttacker('other')
-            main.addTurn(false);
-            main.renderDom();
-            net.sendData({table: main.table, otherHand: main.otherHand, attacker: main.attacker});
+            newBout('other', main.otherHand);
 
         } else if(main.hosting && main.turn % 2 === 0 && main.table.length > 0 && main.attacker === 'host'){
-            moveCards(main.table, main.discard)
-            main.changeAttacker('other');
-            main.addTurn(false);
-            main.renderDom();
+            newBout('other', main.discard);
 
         } else if(!main.hosting && main.turn % 2 !== 0 && main.table.length > 0 && main.attacker === 'other'){
-            moveCards(main.table, main.discard)
-            main.changeAttacker('host');
-            main.addTurn(false);
-            main.renderDom();
+            newBout('host', main.discard)
 
         }
     }
