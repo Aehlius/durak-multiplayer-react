@@ -111,6 +111,11 @@ export class Card extends React.Component {
             if(main.deck.length >= 12) {
                 setupCards(main.deck, main.hostHand, 6)
                 setupCards(main.deck, main.otherHand, 6);
+            } else {
+                while(main.deck.length > 0){
+                    moveCard(main.deck, main.hostHand, Math.floor(Math.random() * main.deck.length));
+                    moveCard(main.deck, main.otherHand, Math.floor(Math.random() * main.deck.length));
+                }
             }
         }
 
