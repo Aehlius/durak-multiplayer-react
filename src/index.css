@@ -45,6 +45,16 @@
     background-color: forestgreen;
 }
 
+#surrender {
+    position: relative;
+    bottom: 0;
+    border: 2px solid black;
+}
+
+#surrender:hover {
+    background-color: grey;
+}
+
 #trumpCard {
     position: relative;
     bottom: 0;

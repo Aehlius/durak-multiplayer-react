@@ -5,14 +5,14 @@ import * as main from './index';
 function generateID(numberOfWords){
     var id = words[Math.floor(Math.random() * words.length)];
     for(var i = 0; i < numberOfWords - 1; i++){
-        id += "-" + words[Math.floor(Math.random() * words.length)];
+        id += "_" + words[Math.floor(Math.random() * words.length)];
     }
 
     return id;
 }
 
 export var id = generateID(3);
-export const p = new Peer("durak-" + id, {host: window.location.hostname, port: 9000});
+export const p = new Peer("durak_" + id, {host: window.location.hostname, port: 9000});
 
 export let inGame = false;
 
@@ -50,7 +50,7 @@ export function sendData(table){
 }
 
 export function joinGame(id){
-    const conn = p.connect("durak-" + id, {reliable: true});
+    const conn = p.connect("durak_" + id, {reliable: true});
     console.log('Connecting...');
 
     conn.on('open', function() {

@@ -10,10 +10,12 @@ export let hostHand = [];
 export let otherHand = [];
 export let table = [];
 export let trump = [];
+export let discard = [];
 
 export let hosting;
 
 export let turn = 0;
+export let attacker = 'host';
 
 class App extends React.Component {
 
@@ -72,7 +74,7 @@ class Game extends React.Component {
                     <card.Card value={trump[0]}/>
                 </div>
                 <div id={"Surrender"}>
-                    <card.Card value={["hi"]}/>
+                    <card.Card value={["Surrender"]} color={'surrender'}/>
                 </div>
             </>
         );
@@ -150,14 +152,6 @@ class StartingPage extends React.Component {
                     }
                 }
 
-
-                if (otherHandLowestTrump < hostHandLowestTrump) {
-                    turn++;
-                } else if (hostHandLowestTrump === otherHandLowestTrump) {
-                    if (Math.random() > 0.5) {
-                        turn++;
-                    }
-                }
                 }
 
             return (
@@ -193,6 +187,7 @@ export function renderDom() {
     );
 }
 
+
 export function updateCards(data){
     if(data.table) {
         for (var i = 0; i <= data.table.length; i++) {
@@ -205,6 +200,14 @@ export function updateCards(data){
                     turn++;
                 }
                 table.push(data.table[i]);
+            }
+
+            if(hostHand.includes(data.table[i])){
+                hostHand.splice(hostHand.indexOf(data.table[i]), 1);
+            }
+
+            if(otherHand.includes(data.table[i])){
+                otherHand.splice(otherHand.indexOf(data.table[i]), 1);
             }
         }
     }
@@ -223,6 +226,10 @@ export function updateCards(data){
             if (!hostHand.includes(data.hostHand[i]) && data.hostHand[i]) {
                 hostHand.push(data.hostHand[i]);
             }
+
+            if(table.includes(data.hostHand[i])) {
+                table.splice(table.indexOf(data.hostHand[i]), 1)
+            }
         }
     }
 
@@ -236,20 +243,25 @@ export function updateCards(data){
     }
 
     if(data.otherHand) {
-        for (var i = 0; i <= data.otherHand.length; i++) {
+        for (let i = 0; i <= data.otherHand.length; i++) {
             if (!otherHand.includes(data.otherHand[i]) && data.otherHand[i]) {
                 otherHand.push(data.otherHand[i]);
             }
+
+            if(table.includes(data.otherHand[i])) {
+                table.splice(table.indexOf(data.otherHand[i]), 1)
+            }
+
         }
+    }
+
+    if(data.attacker){
+        attacker = data.attacker;
     }
 
     if(data.turn){
         turn = data.turn;
     }
-
-
-
-
 
 
     renderDom();
@@ -263,8 +275,21 @@ String.prototype.gCV = function(suit){
     }
 }
 
+//These 2 functions have to exist because of the weird way React allows different JavaScript files to access data
 export function addTurn(){
     turn ++;
+}
+
+export function changeAttacker(player){
+    if(player === null){
+        if(attacker === 'host'){
+            attacker = 'other';
+        } else {
+            attacker = 'host';
+        }
+    } else {
+        attacker = player;
+    }
 }
 
 renderDom();
