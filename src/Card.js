@@ -76,6 +76,8 @@ export class Card extends React.Component {
                 let latestTableCard;
                 if (main.table.length > 0) {
                     latestTableCard = main.table.slice(-1)[0].gCV(true);
+                } else {
+                    latestTableCard = [0, 'x'];
                 }
                 const trumpValue = main.trump[0].gCV(true);
 

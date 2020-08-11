@@ -204,6 +204,22 @@ class StartingPage extends React.Component {
     }
 }
 
+class ErrorHandler extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = { errorOccurred: false }
+    }
+
+    componentDidCatch(error, info) {
+        this.setState({ errorOccurred: true })
+        console.log(error + " " +info)
+    }
+
+    render() {
+        return this.state.errorOccurred ? <h1>Something went wrong!</h1> : this.props.children
+    }
+}
+
 
 export function renderDom() {
     console.log('Rendered!');
@@ -220,7 +236,10 @@ export function renderDom() {
     }
     ReactDOM.render(
         <React.StrictMode>
-            <App/>
+            <ErrorHandler>
+                <App/>
+            </ErrorHandler>
+
         </React.StrictMode>,
         document.getElementById('root')
     );

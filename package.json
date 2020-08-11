@@ -18,7 +18,7 @@
   "scripts": {
     "start-react-server": "react-scripts start",
     "start-peer-server": "peerjs --port 9000",
-    "build": "react-scripts build",
+    "build": "concurrently --kill-others \"react-scripts build\" \"peerjs --port 9000\"",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "start": "concurrently --kill-others \"react-scripts start\" \"peerjs --port 9000\""
